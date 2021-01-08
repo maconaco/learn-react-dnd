@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import List from './List';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
+    <DndProvider backend={HTML5Backend}>
+      <List />
+    </DndProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
