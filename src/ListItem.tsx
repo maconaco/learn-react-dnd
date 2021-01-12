@@ -4,45 +4,38 @@ import { useDrag, useDrop } from "react-dnd";
 type Item = {
   item: string
   index: number
+  change: (drop_index: number, item_index: number) => void
 }
 
 const Types = {
     ITEM: "list_item"
 };
 
-export const ListItem: FC<Item> = ({item, index}) => {
+export const ListItem: FC<Item> = ({item, index, change}) => {
 
-  const [{isDragging}, drag] = useDrag({
+  const [, drag] = useDrag({
     item: {type: Types.ITEM, index},
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging()
     })
   })
 
-  const [{isOver}, drop] = useDrop({
+  const [, drop] = useDrop({
     accept: Types.ITEM,
-    hover: (item,monitor) => {
-      monitor.isOver()
-    },
     drop: (item) => {
-        console.log(`drop item: ${index}, drag item: ${JSON.stringify(item)}`)
+        console.log(`drop item: ${index}, drag item: ${item.index}`);
+        var item_index = item.index;
+        var drop_index = index;
+        [drop_index, item_index] = [item_index, drop_index]
+        console.log(`After return drop item: ${drop_index}, drag item: ${item_index}`)
+        change(drop_index,item_index);
     },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver()
-    })
   })
 
-  if (isDragging) {
-    console.log(`drag: ${JSON.stringify(item)}`)
-  }
-
-  if (isOver) {
-    console.log(`drop place: ${JSON.stringify(item)}`)
-  }
-
+console.log(item[1]);
   return (
     <div ref={drag}>
-      <li ref={drop} style={{ fontSize: '32px'}}>{item}</li>
+      <li ref={drop} style={{ fontSize: '32px'}} >{item}</li>
     </div>
-  )
+  );
 }
